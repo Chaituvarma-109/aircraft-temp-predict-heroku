@@ -1,11 +1,9 @@
+import pickle
+
 from flask import Flask, request, render_template
 from flask_cors import cross_origin
-from Air_temp.model import Model
 
 app = Flask(__name__)
-
-
-mod = Model('ai4i2020.csv')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -28,7 +26,10 @@ def take_inputs():
             pwf = int(request.form["PWF"])
             osf = int(request.form["OSF"])
             rnf = int(request.form["RNF"])
-            pred = mod.prediction([[process_temperature, rotational_speed, torque, tool_wear, twf, hdf, pwf, osf, rnf]])
+            load_model = pickle.load(open('Aircraft Temperature Prediction.pickle', 'rb'))
+            pred = load_model.prediction([
+                [process_temperature, rotational_speed, torque, tool_wear, twf, hdf, pwf, osf, rnf]
+            ])
             return render_template('result.html', prediction=pred[0][0])
         except Exception as e:
             print(f'Exception has occurred: {e}')
