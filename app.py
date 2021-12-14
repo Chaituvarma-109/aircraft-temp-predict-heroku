@@ -27,7 +27,7 @@ def take_inputs():
             osf = int(request.form["OSF"])
             rnf = int(request.form["RNF"])
             load_model = pickle.load(open('Aircraft Temperature Prediction.pickle', 'rb'))
-            pred = load_model.prediction([
+            pred = load_model.predict([
                 [process_temperature, rotational_speed, torque, tool_wear, twf, hdf, pwf, osf, rnf]
             ])
             return render_template('result.html', prediction=pred[0][0])
